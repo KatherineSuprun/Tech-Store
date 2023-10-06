@@ -10,6 +10,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Data // getter setter
 @Entity
 @Table(name = "products")
@@ -36,4 +40,24 @@ public class Product {
 
     @Column(name = "author")
     private String author;
+
+
+    // ALL чтобы удаляло абсолютно все фото в связке при удалении этого товара,
+    // + при сохранении товара список фотографий будет с ним сохранятся и сущности
+    // LAZY не нужно подгружать остальные фото при подгрузке 1 товара(все его фото)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+            mappedBy = "product") // товар связанный с фото будет FK
+    private List<Image> images = new ArrayList<>();
+    private Long previewImageId; // превьюшка ли это фото на главной странице
+    private LocalDateTime dateOfCreated; // когда был создан товар
+
+    @PrePersist // инициализация бина в спринге
+    private void init () {
+        dateOfCreated = LocalDateTime.now();
+    }
+
+    public void addImageToProduct(Image image) {
+        image.setProduct(this); // установили текущий товар
+        images.add(image);
+    }
 }
