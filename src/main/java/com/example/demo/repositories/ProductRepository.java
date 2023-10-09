@@ -8,7 +8,7 @@ import java.util.List;
 
 // JpaRepository вместо ДАО класса ( возможность CRUD методов)
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long > {
 
     // вернет всю продукцию по названию
     List<Product> findByTitle(String title);

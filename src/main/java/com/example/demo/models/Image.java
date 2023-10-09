@@ -38,7 +38,7 @@ public class Image {
     private byte[] bytes;
 
     // у одного товара имеется много фотографий, у нескольких фото имеется один товар
-    // сторона товара - OneToMany, сторона фото ManyToOme
+    // сторона товара - OneToMany, сторона фото ManyToOne
     // REFRESH как повлияет действие с фото на сущность товара , рефреш - обновиться
     // товар подгружаем не сразу(LAZY) , если (EAGER) подгружая фото подгружаем все остальные
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)

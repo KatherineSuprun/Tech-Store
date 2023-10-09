@@ -20,7 +20,6 @@ import java.util.List;
 @Service // является Компонентом
 @Slf4j // логирование
 @RequiredArgsConstructor
-@EnableAutoConfiguration
 public class ProductService {
 
     private final ProductRepository productRepository;

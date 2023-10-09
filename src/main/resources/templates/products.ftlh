@@ -4,7 +4,11 @@
     <title>STORE</title>
 </head>
 <body>
-<h1> STORE </h1><hr>
+<h1> STORE | <a href="/login">Login to account</a> </h1><hr>
+<form action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="${_csrf.token}">
+    <input type="submit" value="Logout"/>
+</form>
 <h3>Original electronics...</h3><br>
 <form action="/" method="get">
     Search by ad name:
@@ -19,7 +23,7 @@
         <h3>No products available</h3>
 </#list>
 <hr>
-<h3>Create new product</h3>                   // указывает что можно передавать файловый тип также
+<h3>Create new product</h3>                   // указывает что можно также передавать файловый тип
 <form action="/product/create" method ="post" enctype="multipart/form-data">
     Ad name: <input type="text" name="title"/><br><br>
     Description of the ad: <input type="text" name="description"/><br><br>

@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @Controller
 @RequiredArgsConstructor // заменяем конструктор
 
@@ -43,7 +42,6 @@ public class ProductController {
     }
 
     // принимаем id товара который нужно удалить
-    @Modifying
     @PostMapping("/product/delete/{id}") // id будет преобразовываться в тип long
     public String deleteProduct(@PathVariable Long id) { // как получить эту переменную
     productService.deleteProduct(id);
