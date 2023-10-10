@@ -1,3 +1,4 @@
+
 package configurations;
 
 import com.example.demo.services.CustomUserDetailsService;
@@ -17,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService userDetailsService;
-
     @Override
     protected void configure(HttpSecurity http) throws Exception { // конфигурация http
         http.authorizeRequests()
@@ -48,3 +48,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder(10);
     }
 }
+

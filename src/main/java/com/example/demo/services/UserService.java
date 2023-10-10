@@ -3,18 +3,21 @@ package com.example.demo.services;
 import com.example.demo.models.User;
 import com.example.demo.models.enums.Role;
 import com.example.demo.repositories.UserRepository;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
-@RequiredArgsConstructor
+@Slf4j // логирование
+@AllArgsConstructor
+
 public class UserService { // логика регистрации
 
     // инжект
     private final UserRepository userRepository;
+
     // шифрование пароля
     private final PasswordEncoder passwordEncoder;
 
@@ -29,6 +32,4 @@ public class UserService { // логика регистрации
         userRepository.save(user); // сохраняем в БД юзера
         return true;
     }
-
-
 }

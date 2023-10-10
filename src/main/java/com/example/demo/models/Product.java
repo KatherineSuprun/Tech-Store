@@ -1,15 +1,11 @@
 package com.example.demo.models;
 
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +22,10 @@ public class Product {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "title")
+   // @Column(name = "title")
     private String title;
 
-    @Column(name = "description", columnDefinition = "text")
+   // @Column(name = "description", columnDefinition = "text")
     private String description;
 
     @Column(name = "price")
@@ -38,21 +34,23 @@ public class Product {
     @Column(name = "city")
     private String city;
 
-    @Column(name = "author")
-    private String author;
-
 
     // ALL чтобы удаляло абсолютно все фото в связке при удалении этого товара,
     // + при сохранении товара список фотографий будет с ним сохранятся и сущности
     // LAZY не нужно подгружать остальные фото при подгрузке 1 товара(все его фото)
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,
-            mappedBy = "product") // товар связанный с фото будет FK
+    mappedBy = "product") // товар связанный с фото будет FK
     private List<Image> images = new ArrayList<>();
     private Long previewImageId; // превьюшка ли это фото на главной странице
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)// рефреш - при удалении
+    // товара чтоб не снесло юзера, лейзи чтоб не подгружать имя автора товара при загрузке товара
+
+    @JoinColumn // FK product with user
+    private User user;
     private LocalDateTime dateOfCreated; // когда был создан товар
 
     @PrePersist // инициализация бина в спринге
-    private void init () {
+    private void init() {
         dateOfCreated = LocalDateTime.now();
     }
 

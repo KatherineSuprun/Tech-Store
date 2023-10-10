@@ -5,6 +5,7 @@ package com.example.demo.controllers;
 import com.example.demo.models.Image;
 import com.example.demo.repositories.ImageRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class ImageController {
     private ImageRepository imageRepository;
 
     @GetMapping("/images/{id}") // принимает айди картинки
-    private ResponseEntity <?> getImageById(@PathVariable Long id) throws Exception {
+    public ResponseEntity <?> getImageById(@PathVariable Long id) throws Exception {
         Image image = imageRepository.findById(id).orElseThrow(() ->
                 new Exception("Image not found with id: " + id));
         return ResponseEntity.ok()

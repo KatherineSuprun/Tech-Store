@@ -2,7 +2,10 @@ package com.example.demo.services;
 
 import com.example.demo.models.Image;
 import com.example.demo.models.Product;
+import com.example.demo.models.User;
 import com.example.demo.repositories.ProductRepository;
+import com.example.demo.repositories.UserRepository;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,18 +14,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service // является Компонентом
+@Service
 @Slf4j // логирование
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final UserRepository userRepository; // инжект для метода User getUserByPrincipal
 
 
     // добавление товара
@@ -49,9 +55,12 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    // сохранение, функция добавления 3-ёх картинок к товару
-    public void saveProduct(Product product, MultipartFile file1,
-                            MultipartFile file2,MultipartFile file3) throws IOException{
+    // сохранение, функция добавления 3-ёх картинок к товару, Principal - состояние приложения у юзеров
+    @Transactional
+    public void saveProduct(Principal principal, Product product, MultipartFile file1,
+                            MultipartFile file2, MultipartFile file3) throws IOException{
+
+        product.setUser(getUserByPrincipal(principal));// присвоить товар определенному юзеру
         Image image1;
         Image image2;
         Image image3;
@@ -70,11 +79,16 @@ public class ProductService {
             product.addImageToProduct(image3);
         }
 
-        log.info("Saving new Product.Title : {}; Author: {}",
-                product.getTitle(), product.getAuthor()); // подставит строковое представление продукта
+        log.info("Saving new Product.Title : {}; Author email: {}",
+                product.getTitle(), product.getUser().getEmail()); // подставит строковое представление продукта
         Product productFromDb = productRepository.save(product);// получаем новый товар
         productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId());
         productRepository.save(product); // обновление и сохранение товара с айди првеью
+    }
+
+    public User getUserByPrincipal(Principal principal) {
+        if(principal == null) return new User();
+        return userRepository.findByEmail(principal.getName());
     }
 
 
@@ -90,6 +104,7 @@ public class ProductService {
     }
 
     // удаление товара по id
+    @Transactional
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }

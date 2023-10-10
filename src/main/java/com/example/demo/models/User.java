@@ -1,17 +1,14 @@
 package com.example.demo.models;
 
 import com.example.demo.models.enums.Role;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -31,10 +28,12 @@ public class User implements UserDetails {
     @Column(name = "active")
     private boolean active; // пока пользователь не подтвердит аккаунт - он будет неактивным\кидать в бан
 
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER) // при удалении юзера удалится всё
     @JoinColumn(name = "image_id")
-    @Column(name = "avatar")
+
     private Image avatar;
+
     @Column(name = "password", length = 1000) // будет добавлено шифрование пароля
     private String password;
 
@@ -42,10 +41,12 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)  // преобразовать enum в тип String (конвертация)
     private Set<Role> roles = new HashSet<>(); // id юзеров и их роли таблица
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user" )
+    private List<Product> products = new ArrayList<>();
 
     private LocalDateTime dateOfCreated; // дата создания аккаунта
 
-    @CreatedDate
+    @PrePersist
     private void init() { // инициализация даты создания
         dateOfCreated = LocalDateTime.now(); //
     }
