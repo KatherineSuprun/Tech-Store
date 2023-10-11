@@ -11,17 +11,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
 
-
-@Controller
+// был контроллер
+@RestController
 // RequiredArgsConstructor вместо него явный конструктор
 public class ProductController {
 
@@ -52,8 +49,6 @@ public class ProductController {
     }
 
     // принимаем id товара который нужно удалить
-    @Transactional
-    @Modifying
     @PostMapping("/product/delete/{id}") // id будет преобразовываться в тип long
     public String deleteProduct(@PathVariable Long id) { // как получить эту переменную
         productService.deleteProduct(id);

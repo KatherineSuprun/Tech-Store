@@ -5,15 +5,9 @@ import com.example.demo.models.Product;
 import com.example.demo.models.User;
 import com.example.demo.repositories.ProductRepository;
 import com.example.demo.repositories.UserRepository;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,31 +19,39 @@ import java.util.List;
 
 @Service
 @Slf4j // логирование
-@AllArgsConstructor
+//@RequiredArgsConstructor // вместо All потому что есть финал поля
 public class ProductService {
-
     private final ProductRepository productRepository;
     private final UserRepository userRepository; // инжект для метода User getUserByPrincipal
 
+    public ProductService(ProductRepository productRepository, UserRepository userRepository) {
+        this.productRepository = productRepository;
+        this.userRepository = userRepository;
+    }
 
     // добавление товара
     private List<Product> products = new ArrayList<>();
+    public ProductService(ProductRepository productRepository, UserRepository userRepository, List<Product> products) {
+        this.productRepository = productRepository;
+        this.userRepository = userRepository;
+        this.products = products;
+    }
 
     /* { // у каждого товара свой идентификатор, ставлю инкремент
-         products.add(new Product("PlayStation 5", "Lightning speed\n" +
-                 "Haptic feedback\n" +
-                 "3D audio\n" +
-                 "HyperMotionV", 21000, "Kyiv", "PlayStation" ));
-         products.add(new Product( "Samsung A50", "RAM 6 GB\n" +
-                 "built-in 128 GB\n" +
-                 "camera 25 MP\n" +
-                 "wide-angle 8 MP", 6000, "Lviv", "Samsung" ));
-         products.add(new Product("Marshall Major IV", "Frequency range 20-20000 Hz\n" +
-                 "Sensitivity 98 dB\n" +
-                 "Weight 240\n" +
-                 "Charging time 3 hours\n" +
-                 "Operating time, 3 hours", 6700, "Odessa", "Marshall"));
-     }*/
+             products.add(new Product("PlayStation 5", "Lightning speed\n" +
+                     "Haptic feedback\n" +
+                     "3D audio\n" +
+                     "HyperMotionV", 21000, "Kyiv", "PlayStation" ));
+             products.add(new Product( "Samsung A50", "RAM 6 GB\n" +
+                     "built-in 128 GB\n" +
+                     "camera 25 MP\n" +
+                     "wide-angle 8 MP", 6000, "Lviv", "Samsung" ));
+             products.add(new Product("Marshall Major IV", "Frequency range 20-20000 Hz\n" +
+                     "Sensitivity 98 dB\n" +
+                     "Weight 240\n" +
+                     "Charging time 3 hours\n" +
+                     "Operating time, 3 hours", 6700, "Odessa", "Marshall"));
+         }*/
     // просмотр всех товаров
     public List<Product> listProducts(String title) {
         if (title != null) productRepository.findByTitle(title); // метод благодаря jpa

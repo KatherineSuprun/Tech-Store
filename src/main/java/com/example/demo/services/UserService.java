@@ -1,16 +1,16 @@
 package com.example.demo.services;
-
 import com.example.demo.models.User;
 import com.example.demo.models.enums.Role;
 import com.example.demo.repositories.UserRepository;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j // логирование
-@AllArgsConstructor
+//@RequiredArgsConstructor
 
 public class UserService { // логика регистрации
 
@@ -18,7 +18,15 @@ public class UserService { // логика регистрации
     private final UserRepository userRepository;
 
     // шифрование пароля
-    private final PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     public boolean createUser(User user) { // создание юзера
         String email = user.getEmail();
