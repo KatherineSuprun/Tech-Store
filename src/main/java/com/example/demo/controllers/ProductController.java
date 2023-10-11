@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,6 @@ public class ProductController {
     // инверсия управления, сразу же при
     // создании компонента ProductController добавит контекст сервиса
     private final ProductService productService;
-    @Autowired
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
@@ -52,6 +52,8 @@ public class ProductController {
     }
 
     // принимаем id товара который нужно удалить
+    @Transactional
+    @Modifying
     @PostMapping("/product/delete/{id}") // id будет преобразовываться в тип long
     public String deleteProduct(@PathVariable Long id) { // как получить эту переменную
         productService.deleteProduct(id);

@@ -22,10 +22,10 @@ public class Product {
     @Column(name = "id")
     private Long id;
 
-   // @Column(name = "title")
+    @Column(name = "title")
     private String title;
 
-   // @Column(name = "description", columnDefinition = "text")
+    @Column(name = "description", columnDefinition = "text")
     private String description;
 
     @Column(name = "price")
@@ -49,7 +49,7 @@ public class Product {
     private User user;
     private LocalDateTime dateOfCreated; // когда был создан товар
 
-    @PrePersist // инициализация бина в спринге
+   // &&&&&&&&&&&&&&&&&&&&??????? @PrePersist // инициализация бина в спринге
     private void init() {
         dateOfCreated = LocalDateTime.now();
     }

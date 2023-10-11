@@ -3,7 +3,6 @@ package com.example.demo.models;
 import com.example.demo.models.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
