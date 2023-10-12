@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,7 +33,7 @@ public class ProductController {
     @GetMapping("/")
     // передаем список товаров с контроллера шаблонизатору
     public String products(@RequestParam(name = "title", required = false) String title, Principal
-            principal, Model model) {
+            principal, ModelMap model) {
         model.addAttribute("products", productService.listProducts(title));
         // скрыть возможность добавление товара для не зареганых пользователей
         model.addAttribute("user", productService.getUserByPrincipal(principal));
@@ -54,10 +55,10 @@ public class ProductController {
         productService.deleteProduct(id);
         return "redirect:/"; // удаление товара и переход на главную страницу
     }
-    // просмотр подробной инфы о каждом товаре
 
+    // просмотр подробной инфы о каждом товаре
     @GetMapping("/product/{id}")
-    public String productInfo(@PathVariable Long id, Model model) { // Модель для передачи данных
+    public String productInfo(@PathVariable Long id, ModelMap model) { // Модель для передачи данных, элементов
         //товар с этим айдишником передаю в модель и отображаю
         Product product = productService.getProductById(id);
         model.addAttribute("product", product);

@@ -5,8 +5,10 @@ import com.example.demo.models.Product;
 import com.example.demo.models.User;
 import com.example.demo.repositories.ProductRepository;
 import com.example.demo.repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +25,6 @@ import java.util.List;
 public class ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository; // инжект для метода User getUserByPrincipal
-
-    public ProductService(ProductRepository productRepository, UserRepository userRepository) {
-        this.productRepository = productRepository;
-        this.userRepository = userRepository;
-    }
 
     // добавление товара
     private List<Product> products = new ArrayList<>();
@@ -59,25 +56,25 @@ public class ProductService {
     }
 
     // сохранение, функция добавления 3-ёх картинок к товару, Principal - состояние приложения у юзеров
-    @Transactional
+    //@Bean
     public void saveProduct(Principal principal, Product product, MultipartFile file1,
-                            MultipartFile file2, MultipartFile file3) throws IOException{
+                            MultipartFile file2, MultipartFile file3) throws IOException {
 
         product.setUser(getUserByPrincipal(principal));// присвоить товар определенному юзеру
         Image image1;
         Image image2;
         Image image3;
         // если размер фото не 0 (тоесть её нет), то image преобразовывем из MultipartFile в фото
-        if(file1.getSize() != 0){
+        if (file1.getSize() != 0) {
             image1 = toImageEntity(file1);
             image1.setPreviewImage(true); // если картинка первая, то она - превью
             product.addImageToProduct(image1);
         }
-        if(file2.getSize() != 0){
+        if (file2.getSize() != 0) {
             image2 = toImageEntity(file2);
             product.addImageToProduct(image2);
         }
-        if(file3.getSize() != 0){
+        if (file3.getSize() != 0) {
             image3 = toImageEntity(file1);
             product.addImageToProduct(image3);
         }
@@ -90,25 +87,25 @@ public class ProductService {
     }
 
     public User getUserByPrincipal(Principal principal) {
-        if(principal == null) return new User();
+        if (principal == null) return new User();
         return userRepository.findByEmail(principal.getName());
     }
 
 
     // метод для преобразрования файла в картинку
+
     private Image toImageEntity(MultipartFile file) throws IOException {
-      Image image = new Image();
-      image.setName(file.getName()); // назначаем имя из файла
-      image.setOriginalFileName(file.getOriginalFilename()); // назначаем оригинальное имя
-      image.setContentType(file.getContentType());
-      image.setSize(file.getSize());
-      image.setBytes(file.getBytes());
-      return image;
+        Image image = new Image();
+        image.setName(file.getName()); // назначаем имя из файла
+        image.setOriginalFileName(file.getOriginalFilename()); // назначаем оригинальное имя
+        image.setContentType(file.getContentType());
+        image.setSize(file.getSize());
+        image.setBytes(file.getBytes());
+        return image;
     }
 
     // удаление товара по id
-    @Transactional
-    @Modifying
+
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }

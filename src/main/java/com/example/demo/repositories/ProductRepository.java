@@ -11,6 +11,7 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long > {
 
     // вернет всю продукцию по названию
+
     List<Product> findByTitle(String title);
 
 }

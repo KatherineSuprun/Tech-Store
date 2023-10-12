@@ -4,6 +4,7 @@ import com.example.demo.models.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -47,7 +48,7 @@ public class User implements UserDetails {
 
     private LocalDateTime dateOfCreated; // дата создания аккаунта
 
-    @PrePersist
+    @Bean
     private void init() { // инициализация даты создания
         dateOfCreated = LocalDateTime.now(); //
     }
